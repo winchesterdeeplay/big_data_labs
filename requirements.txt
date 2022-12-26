@@ -1,0 +1,4 @@
+clickhouse-driver==0.2.5
+keyring==23.4.1
+keyrings.alt==4.2.0
+pandas==1.5.0

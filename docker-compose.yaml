@@ -1,0 +1,29 @@
+version: '2.1'
+
+services:
+  ch_server:
+    image: yandex/clickhouse-server
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+      - "9009:9009"
+    volumes:
+      - ./db:/var/lib/clickhouse
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: default
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  data_generator_script:
+    depends_on:
+      ch_server:
+        condition: service_healthy
+    restart: on-failure
+    build: .
+    ports:
+      - "8000:5000"
