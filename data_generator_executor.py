@@ -7,11 +7,14 @@ from lib.clickhouse_hook import ClickhouseNativeHook
 from lib.data_generator import ShopDataGenerator
 from lib.load_query import load_query
 import logging
+import random
 
 HOST = "ch_server"  # change to localhost
+# HOST = "localhost"
 GENERATE_DATA = True
 QUERIES_PATH = "queries"
 DIR_PATH = Path(__file__).parent.resolve()
+SEED = 42
 
 ENTITIES = [
     "delivery",
@@ -32,6 +35,7 @@ CLICKHOUSE_LOGIN = keyring.get_password("clickhouse_lab1", "username")
 CLICKHOUSE_PASSWORD = keyring.get_password("clickhouse_lab1", "password")
 
 if __name__ == "__main__":
+    random.seed(SEED)
     client = ClickhouseNativeHook(login=CLICKHOUSE_LOGIN, password=CLICKHOUSE_PASSWORD, host=HOST).get_connection()
     # create tables if not exists
     for entity in ENTITIES:
